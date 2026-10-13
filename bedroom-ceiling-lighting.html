@@ -1,0 +1,484 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Bedroom Ceiling Lighting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: full-bleed 3D room on the left, a fixture & finish panel on the right (stacks below on phones).
+   Single dark look on purpose: lit interiors read best against a dim surround. */
+:root {
+  --bg: #141210;
+  --panel: #1c1a17;
+  --raise: #25221e;
+  --line: #34302a;
+  --fg: #eee8de;
+  --muted: #a39b8f;
+  --accent: #e9b860;
+  --focus: #f3cf8a;
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 14px; line-height: 1.5; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; height: 100%; }
+.stage { position: relative; min-width: 0; background: #0c0b0a; overflow: hidden; touch-action: none; cursor: grab; }
+.stage:active { cursor: grabbing; }
+#c { display: block; width: 100%; height: 100%; }
+.views { position: absolute; left: 16px; top: 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+.views button, .chip {
+  font: 500 12px/1 var(--f-body); color: var(--fg); background: rgba(20,18,16,.72);
+  border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px; cursor: pointer;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.views button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.hint { position: absolute; left: 16px; bottom: 14px; font: 400 12px var(--f-body); color: rgba(238,232,222,.7); pointer-events: none; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font: 500 13px var(--f-body); background: #0c0b0a; padding-inline: 16px; text-align: center; }
+
+.panel { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding-block: 22px 28px; padding-inline: 20px; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.eyebrow { font: 500 11px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 700 26px/1.1 var(--f-display); letter-spacing: -.01em; margin: 6px 0 6px; text-wrap: balance; }
+.lede { color: var(--muted); margin: 0; max-width: 60ch; }
+h2 { font: 600 11px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+
+.group { display: flex; flex-direction: column; gap: 8px; }
+.light { background: var(--raise); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 10px; }
+.light-head { display: grid; grid-template-columns: 14px minmax(0,1fr) auto; gap: 10px; align-items: center; }
+.swatch { width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 10px 1px currentColor; background: currentColor; transition: opacity .2s; }
+.light.off .swatch { opacity: .2; box-shadow: none; }
+.light-name { font-weight: 600; }
+.light-sub { color: var(--muted); font-size: 12px; }
+.switch { position: relative; width: 38px; height: 22px; flex: none; }
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.switch span { position: absolute; inset: 0; border-radius: 999px; background: var(--line); transition: background .2s; pointer-events: none; }
+.switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--fg); transition: transform .2s; }
+.switch input:checked + span { background: var(--accent); }
+.switch input:checked + span::after { transform: translateX(16px); background: #1c1a17; }
+.switch input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+.light-ctrl { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 10px; align-items: center; }
+.kelvins { display: flex; gap: 4px; }
+.chip { padding: 5px 7px; font: 500 11px var(--f-mono); background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+input[type=range] { width: 100%; accent-color: var(--accent); min-width: 0; }
+button:focus-visible, input[type=range]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.exposure { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 12px; align-items: center; color: var(--muted); font-size: 12px; }
+
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th, td { text-align: left; padding: 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 11px var(--f-mono); color: var(--muted); letter-spacing: .04em; }
+td + td, th + th { padding-left: 10px; }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.paint { display: inline-flex; align-items: center; gap: 8px; }
+.paint i { width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,.18); flex: none; }
+.note { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+
+@media (max-width: 860px) {
+  html, body { height: auto; }
+  .app { display: flex; flex-direction: column; height: auto; }
+  .stage { height: 62svh; min-height: 340px; }
+  .panel { border-left: 0; border-top: 1px solid var(--line); overflow: visible; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <div class="stage" id="stage">
+    <canvas id="c" aria-label="3D render of the bedroom ceiling"></canvas>
+    <div class="views" role="group" aria-label="Camera views">
+      <button id="v-look" aria-pressed="true">Standing, looking up</button>
+      <button id="v-bed" aria-pressed="false">Lying on the bed</button>
+      <button id="v-room" aria-pressed="false">Whole room</button>
+    </div>
+    <div class="hint">Drag to look around · scroll or pinch to zoom</div>
+    <div class="loading" id="loading">Building the room…</div>
+  </div>
+
+  <aside class="panel">
+    <header>
+      <div class="eyebrow">10 × 10 ft bedroom · false ceiling</div>
+      <h1>Cove, profile &amp; COB layout</h1>
+      <p class="lede">Your wireframe built as a two‑level gypsum ceiling: a white outer band with COB lights and a warm cove, and the slab inside it with a grey panel, white profile lines, spots and the ceiling fan.</p>
+    </header>
+
+    <section class="group" aria-labelledby="h-lights">
+      <h2 id="h-lights">Lights</h2>
+      <div id="lights"></div>
+      <div class="light" id="fanrow"><div class="light-head"><span class="swatch" style="color:var(--muted);box-shadow:none"></span><div><div class="light-name">Ceiling fan</div><div class="light-sub">Turn on to see it spin</div></div>
+        <label class="switch"><input type="checkbox" id="fan-on" aria-label="Ceiling fan on or off"><span></span></label></div></div>
+      <div class="exposure"><label for="exp">Brightness</label><input id="exp" type="range" min="0.4" max="2.2" step="0.05" value="0.75"></div>
+    </section>
+
+    <section aria-labelledby="h-fix">
+      <h2 id="h-fix">Fixture schedule</h2>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Fixture</th><th>Qty</th><th>Spec</th></tr></thead>
+          <tbody>
+            <tr><td>Cove LED strip</td><td class="num">≈ 30 ft</td><td>Inner edge of the outer band, 12 V, 120 LED/m, <span data-k="cove">3000</span>K, hidden behind a 40 mm upstand</td></tr>
+            <tr><td>Profile light</td><td class="num">≈ 17.5 ft</td><td>Two L‑shaped runs, 20 mm recessed aluminium profile with opal diffuser, <span data-k="profile">6000</span>K</td></tr>
+            <tr><td>COB downlight</td><td class="num">8</td><td>Perimeter band, 7 W round, white trim, 7 in (185 mm) from wall, <span data-k="outer">6000</span>K</td></tr>
+            <tr><td>COB spot</td><td class="num">4</td><td>Centre panel, in pairs at the profile gaps, 3 W, black trim, <span data-k="inner">3000</span>K</td></tr>
+            <tr><td>Ceiling fan</td><td class="num">1</td><td>Centre of the grey panel, 1200 mm (48″) sweep, 3 blades, 9″ downrod, matte white</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-fin">
+      <h2 id="h-fin">Levels &amp; paint</h2>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Zone</th><th>Height</th><th>Finish</th></tr></thead>
+          <tbody>
+            <tr><td>Outer band (wall to 14 in)</td><td class="num">8′ 10″</td><td><span class="paint"><i style="background:#f4f2ee"></i>White, matte</span></td></tr>
+            <tr><td>Slab, 12 in border round the grey</td><td class="num">10′ 0″</td><td><span class="paint"><i style="background:#f4f2ee"></i>White, matte</span></td></tr>
+            <tr><td>Grey panel (5′ 8″ sq, painted)</td><td class="num">10′ 0″</td><td><span class="paint"><i style="background:#8f9296"></i>Mid grey, matte</span></td></tr>
+            <tr><td>Walls</td><td class="num">—</td><td><span class="paint"><i style="background:#d9d3c9"></i>Light greige</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Two levels only: the outer band at 8′10″ and the slab at 10′0″. The grey panel is paint on the slab, not a box. Heights assume a 10 ft slab.</p>
+    </section>
+  </aside>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const loading = document.getElementById('loading');
+try { start(); } catch (e) { loading.textContent = 'This view needs WebGL, which this browser could not start. Try another browser or device.'; console.error(e); }
+
+function start() {
+const FT = 0.3048;
+const W = 10 * FT, HW = W / 2;           // room 10 ft square, metres
+const SLAB = 10 * FT;                     // 10 ft slab
+const PX = FT / 96;                       // wireframe: 960 px = 10 ft
+const wx = px => px * PX - HW;            // wireframe px -> world x / z
+
+// Ceiling levels (metres)
+// outer band: a solid bulkhead from 8'10" up to 5.5" below the slab, opening 7'8"; the cove sits in the trough on top
+const T1 = { y: 2.69, t: (SLAB - 0.14) - 2.69, lip: 0.04, a: (848 - 112) / 2 * PX, r: 0.5 * FT };
+const PANEL = { a: (752 - 208) / 2 * PX, r: 0.5 * FT };                          // grey painted square on the slab, 5'8"
+
+RectAreaLightUniformsLib.init();
+const stage = document.getElementById('stage');
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.75;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+const camera = new THREE.PerspectiveCamera(68, 1, 0.03, 30);
+camera.rotation.order = 'YXZ';
+
+// ---------- materials ----------
+const envMats = [];
+const std = (hex, rough = 0.92, extra = {}) => { const m = new THREE.MeshStandardMaterial({ color: hex, roughness: rough, metalness: 0, ...extra }); envMats.push(m); return m; };
+// matte emulsion paint: diffuse only, so walls and the band edge don't pick up a mirror-like line at grazing angles
+const paint = hex => { const m = new THREE.MeshPhysicalMaterial({ color: hex, roughness: 1, metalness: 0, specularIntensity: 0 }); envMats.push(m); return m; };
+const mWhite = paint(0xf4f2ee);
+const mGrey = paint(0x9a9da1);
+const mWall = paint(0xd9d3c9);
+const mSkirt = std(0xcfc6b8, 0.5);
+
+// vitrified floor tiles, 600 mm
+function tileTex() {
+  const c = document.createElement('canvas'); c.width = c.height = 1024; const g = c.getContext('2d');
+  const n = 2, s = 1024 / n;
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const v = 226 + ((i * 7 + j * 3) % 5) - 2;
+    g.fillStyle = `rgb(${v},${v - 6},${v - 16})`; g.fillRect(i * s, j * s, s, s);
+    for (let k = 0; k < 700; k++) { // faint marble speckle
+      g.fillStyle = `rgba(150,130,105,${Math.random() * 0.05})`;
+      const x = i * s + Math.random() * s, y = j * s + Math.random() * s;
+      g.fillRect(x, y, 2 + Math.random() * 18, 1 + Math.random() * 2);
+    }
+  }
+  g.strokeStyle = 'rgb(190,180,165)'; g.lineWidth = 3;
+  for (let k = 0; k <= n; k++) { g.beginPath(); g.moveTo(k * s, 0); g.lineTo(k * s, 1024); g.stroke(); g.beginPath(); g.moveTo(0, k * s); g.lineTo(1024, k * s); g.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(W / 1.2, W / 1.2); t.anisotropy = 8; return t;
+}
+const mFloor = std(0xffffff, 0.32, { map: tileTex() });
+
+// ---------- geometry helpers ----------
+function rr(p, h, r) { // rounded square path centred at origin, half-size h
+  if (r <= 0) { p.moveTo(-h, -h); p.lineTo(h, -h); p.lineTo(h, h); p.lineTo(-h, h); p.lineTo(-h, -h); return p; }
+  p.moveTo(-h + r, -h); p.lineTo(h - r, -h); p.absarc(h - r, -h + r, r, -Math.PI / 2, 0);
+  p.lineTo(h, h - r); p.absarc(h - r, h - r, r, 0, Math.PI / 2);
+  p.lineTo(-h + r, h); p.absarc(-h + r, h - r, r, Math.PI / 2, Math.PI);
+  p.lineTo(-h, -h + r); p.absarc(-h + r, -h + r, r, Math.PI, Math.PI * 1.5); return p;
+}
+function ring(outer, outerR, inner, innerR, y0, h, mat) {
+  const s = rr(new THREE.Shape(), outer, outerR);
+  if (inner) s.holes.push(rr(new THREE.Path(), inner, innerR));
+  const g = new THREE.ExtrudeGeometry(s, { depth: h, bevelEnabled: false, curveSegments: 20 });
+  g.rotateX(-Math.PI / 2);
+  const m = new THREE.Mesh(g, mat); m.position.y = y0; scene.add(m); return m;
+}
+const box = (w, h, d, mat, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); scene.add(m); return m; };
+
+// ---------- room shell ----------
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, W), mFloor); floor.rotation.x = -Math.PI / 2; scene.add(floor);
+const slab = new THREE.Mesh(new THREE.PlaneGeometry(W, W), mWhite); slab.rotation.x = Math.PI / 2; slab.position.y = SLAB; scene.add(slab);
+const wallN = new THREE.Mesh(new THREE.PlaneGeometry(W, SLAB), mWall); wallN.position.set(0, SLAB / 2, -HW); scene.add(wallN);
+const wallS = wallN.clone(); wallS.position.set(0, SLAB / 2, HW); wallS.rotation.y = Math.PI; scene.add(wallS);
+const wallW = wallN.clone(); wallW.position.set(-HW, SLAB / 2, 0); wallW.rotation.y = Math.PI / 2; scene.add(wallW);
+const wallE = wallN.clone(); wallE.position.set(HW, SLAB / 2, 0); wallE.rotation.y = -Math.PI / 2; scene.add(wallE);
+// skirting
+box(W, 0.09, 0.012, mSkirt, 0, 0.045, -HW + 0.006); box(W, 0.09, 0.012, mSkirt, 0, 0.045, HW - 0.006);
+box(0.012, 0.09, W, mSkirt, -HW + 0.006, 0.045, 0); box(0.012, 0.09, W, mSkirt, HW - 0.006, 0.045, 0);
+
+// ---------- false ceiling ----------
+ring(HW, 0, T1.a + 0.015, T1.r + 0.015, T1.y, T1.t, mWhite);                   // outer band
+ring(T1.a + 0.015, T1.r + 0.015, T1.a, T1.r, T1.y, T1.t + T1.lip, mWhite);     // inner edge: one solid fascia, band + cove upstand in a single face
+// back of the cove trough, closed up to the slab so nothing above the band shows through the cove opening
+ring(T1.a + 0.26, T1.r + 0.26, T1.a + 0.245, T1.r + 0.245, T1.y + T1.t, SLAB - (T1.y + T1.t), mWhite);
+// level 2 is the slab itself: white, with the grey panel painted on it
+{ const g = new THREE.ShapeGeometry(rr(new THREE.Shape(), PANEL.a, PANEL.r), 16); g.rotateX(Math.PI / 2);
+  const m = new THREE.Mesh(g, mGrey); m.position.y = SLAB - 0.0008; scene.add(m); }
+
+// ---------- light groups ----------
+const groups = {
+  cove:    { name: 'Cove light', sub: 'Warm glow at the inner edge of the band', k: 3000, on: true, dim: 1, lights: [], glow: [], ribbons: [] },
+  profile: { name: 'Profile light', sub: 'Two L‑shaped lines in the grey panel', k: 6000, on: true, dim: 1, lights: [], glow: [], ribbons: [] },
+  outer:   { name: 'COB downlights', sub: '8 in the outer band', k: 6000, on: true, dim: 1, lights: [], glow: [], ribbons: [] },
+  inner:   { name: 'COB spots', sub: '4 in pairs at the profile gaps', k: 3000, on: true, dim: 1, lights: [], glow: [], ribbons: [] },
+};
+const LEVEL = { cove: 8, profile: 1.3, outer: 2.4, inner: 1.6 };   // base light output
+const GLOW  = { cove: 60, profile: 22, outer: 40, inner: 30 };     // visible emitter brightness
+const RIB = 1.9, RIB_TINT = new THREE.Color(1, 0.92, 0.6);                     // halo wash on the panel
+
+function glowMat() { const m = new THREE.MeshStandardMaterial({ color: 0xf2f2f0, roughness: 0.6, emissive: 0xffffff, emissiveIntensity: 1 }); envMats.push(m); return m; }
+
+// Cove strips: lie on top of the lower plate behind the upstand, aimed up and inward
+function cove(T) {
+  const y = T.y + T.t + 0.012, d = T.a + 0.05, len = 2 * T.a;
+  const m = glowMat(); groups.cove.glow.push(m);
+  [[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(([sx, sz]) => {
+    const px = sx * d, pz = sz * d;
+    const L = new THREE.RectAreaLight(0xffffff, 1, len, 0.03);
+    L.position.set(px, y, pz);
+    L.lookAt(px - sx * 0.35, y + 1, pz - sz * 0.35);
+    scene.add(L); groups.cove.lights.push(L);
+    const strip = new THREE.Mesh(new THREE.BoxGeometry(sx ? 0.012 : len, 0.008, sx ? len : 0.012), m);
+    strip.position.set(px, y - 0.004, pz); scene.add(strip);
+  });
+}
+cove(T1);
+
+// Profile lights: two L runs recessed into the grey panel (exact wireframe coordinates)
+const PROF_W = 0.022;
+const runs = [
+  [248, 248, 712, 248], [248, 248, 248, 620],   // top + left
+  [710, 340, 710, 710], [248, 710, 710, 710],   // right + bottom
+];
+{
+  const m = glowMat(); groups.profile.glow.push(m);
+  const trim = std(0xbfc1c4, 0.4, { metalness: 0.6 });
+  runs.forEach(([x1, z1, x2, z2]) => {
+    const ax = wx(x1), az = wx(z1), bx = wx(x2), bz = wx(z2);
+    const cx = (ax + bx) / 2, cz = (az + bz) / 2;
+    const alongX = Math.abs(bx - ax) > Math.abs(bz - az);
+    const len = alongX ? Math.abs(bx - ax) + PROF_W : Math.abs(bz - az) + PROF_W;
+    const g = new THREE.PlaneGeometry(alongX ? len : PROF_W, alongX ? PROF_W : len); g.rotateX(Math.PI / 2);
+    const strip = new THREE.Mesh(g, m); strip.position.set(cx, SLAB - 0.0024, cz); scene.add(strip);
+    const tg = new THREE.PlaneGeometry(alongX ? len + 0.01 : PROF_W + 0.01, alongX ? PROF_W + 0.01 : len + 0.01); tg.rotateX(Math.PI / 2);
+    const t = new THREE.Mesh(tg, trim); t.position.set(cx, SLAB - 0.0016, cz); scene.add(t);
+    // light from the line falls downward only; two wide emitters per run
+    [0.25, 0.75].forEach(f => {
+      const x = ax + (bx - ax) * f, z = az + (bz - az) * f;
+      const L = new THREE.SpotLight(0xffffff, 1, 0, 0.85, 1, 2);
+      L.position.set(x, SLAB - 0.02, z); L.target.position.set(x, 0, z); scene.add(L, L.target); groups.profile.lights.push(L);
+    });
+  });
+}
+
+// COB fixtures
+function cob(x, z, y, group, dia, trimHex, angle) {
+  const g = groups[group];
+  const trim = std(trimHex, 0.35, { metalness: trimHex === 0xf4f4f2 ? 0 : 0.5 });
+  const rim = new THREE.Mesh(new THREE.CylinderGeometry(dia / 2, dia / 2, 0.006, 40), trim); rim.position.set(x, y - 0.003, z); scene.add(rim);
+  const m = glowMat(); g.glow.push(m);
+  const face = new THREE.Mesh(new THREE.CircleGeometry(dia * 0.32, 32), m); face.rotation.x = Math.PI / 2; face.position.set(x, y - 0.0065, z); scene.add(face);
+  const L = new THREE.SpotLight(0xffffff, 1, 0, angle, 0.75, 2);
+  L.position.set(x, y - 0.01, z); L.target.position.set(x, 0, z); scene.add(L, L.target); g.lights.push(L);
+}
+const ob = 59 * PX - HW, mid = 0;
+[[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]].forEach(([i, j]) =>
+  cob(i === 0 ? mid : i * -ob, j === 0 ? mid : j * -ob, T1.y, 'outer', 0.1, 0xf4f4f2, 0.56));
+[[710, 277], [710, 316], [249, 645], [249, 684]].forEach(([x, z]) => cob(wx(x), wx(z), SLAB, 'inner', 0.065, 0x2a2826, 0.42));
+
+// ---------- ceiling fan, 1200 mm sweep, centre of the grey panel ----------
+const fanBody = std(0xeeece7, 0.45), fanBlade = std(0xe6e3dc, 0.6);
+const fan = new THREE.Group(); scene.add(fan);
+{
+  const canopy = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.065, 0.06, 40), fanBody); canopy.position.y = SLAB - 0.03; fan.add(canopy);
+  const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.23, 16), fanBody); rod.position.y = SLAB - 0.06 - 0.115; fan.add(rod);
+}
+const rotor = new THREE.Group(); rotor.position.y = SLAB - 0.29; fan.add(rotor);
+{
+  const motor = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.115, 0.075, 48), fanBody); rotor.add(motor);
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.1, 0.03, 40), fanBody); top.position.y = 0.052; rotor.add(top);
+  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.115, 40, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), fanBody); cap.scale.y = 0.28; cap.position.y = -0.037; rotor.add(cap);
+  // tapered blade with a rounded tip
+  const bs = new THREE.Shape();
+  bs.moveTo(0, -0.045); bs.lineTo(0.43, -0.06); bs.quadraticCurveTo(0.5, -0.06, 0.5, 0); bs.quadraticCurveTo(0.5, 0.06, 0.43, 0.06); bs.lineTo(0, 0.045); bs.lineTo(0, -0.045);
+  const bg = new THREE.ExtrudeGeometry(bs, { depth: 0.006, bevelEnabled: false, curveSegments: 10 }); bg.rotateX(-Math.PI / 2);
+  for (let i = 0; i < 3; i++) {
+    const arm = new THREE.Group(); arm.rotation.y = i * Math.PI * 2 / 3; rotor.add(arm);
+    const blade = new THREE.Mesh(bg, fanBlade); blade.position.set(0.12, -0.012, 0); blade.rotation.x = 0.13; arm.add(blade);
+    const hold = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.012, 0.04), fanBody); hold.position.set(0.1, -0.01, 0); arm.add(hold);
+  }
+  rotor.rotation.y = 0.35;
+}
+
+// ---------- furniture (for scale) ----------
+const fab = std(0x6c6761, 0.95), base = std(0x5d5852, 0.9), duvet = std(0xebe9e4, 0.95), pil = std(0xd6d2cb, 0.95), throwM = std(0x9c8e7c, 0.95), wood = std(0x6b4b34, 0.55), lampM = std(0xe8e2d6, 0.8);
+const bedW = 1.55, bedL = 2.0, bz = -HW + 0.08 + bedL / 2;
+box(bedW + 0.1, 1.05, 0.08, fab, 0, 0.525, -HW + 0.04);                  // headboard
+box(bedW, 0.3, bedL, base, 0, 0.17, bz);                                   // base
+box(bedW - 0.04, 0.2, bedL - 0.05, duvet, 0, 0.42, bz + 0.01);             // mattress + duvet
+box(0.62, 0.12, 0.38, pil, -0.36, 0.58, -HW + 0.32); box(0.62, 0.12, 0.38, pil, 0.36, 0.58, -HW + 0.32);
+box(bedW + 0.02, 0.03, 0.55, throwM, 0, 0.535, bz + bedL / 2 - 0.4);      // throw at the foot
+[-1, 1].forEach(s => { const x = s * (bedW / 2 + 0.05 + 0.22); box(0.44, 0.5, 0.4, wood, x, 0.25, -HW + 0.22); box(0.18, 0.28, 0.18, lampM, x, 0.64, -HW + 0.2); });
+// soft contact shadow under bed
+{ const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  const gr = g.createRadialGradient(64, 64, 20, 64, 64, 64); gr.addColorStop(0, 'rgba(0,0,0,.55)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+  const sh = new THREE.Mesh(new THREE.PlaneGeometry(bedW + 0.5, bedL + 0.35), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+  sh.rotation.x = -Math.PI / 2; sh.position.set(0, 0.002, bz); scene.add(sh); }
+
+// ---------- colour temperature ----------
+function kelvin(k) {
+  const t = k / 100; let r, g, b;
+  if (t <= 66) { r = 255; g = 99.4708025861 * Math.log(t) - 161.1195681661; b = t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307; }
+  else { r = 329.698727446 * Math.pow(t - 60, -0.1332047592); g = 288.1221695283 * Math.pow(t - 60, -0.0755148492); b = 255; }
+  const c = v => Math.min(255, Math.max(0, v)) / 255;
+  return new THREE.Color().setRGB(c(r), c(g), c(b), THREE.SRGBColorSpace);
+}
+const cssK = k => '#' + kelvin(k).getHexString(THREE.SRGBColorSpace);
+
+// ---------- one-bounce light (captured from the lit room) ----------
+const cubeRT = new THREE.WebGLCubeRenderTarget(128, { type: THREE.HalfFloatType });
+const cubeCam = new THREE.CubeCamera(0.05, 20, cubeRT); cubeCam.position.set(0, 1.45, 0.55); scene.add(cubeCam);
+const pmrem = new THREE.PMREMGenerator(renderer);
+let envRT = null;
+function bounce() {
+  scene.environment = null;
+  for (let pass = 0; pass < 2; pass++) {
+    cubeCam.update(renderer, scene);
+    const next = pmrem.fromCubemap(cubeRT.texture);
+    if (envRT) envRT.dispose();
+    envRT = next; scene.environment = envRT.texture;
+  }
+  envMats.forEach(m => m.envMapIntensity = 0.85);
+}
+
+// ---------- post ----------
+const rt = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, samples: 4 });
+const composer = new EffectComposer(renderer, rt);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.22, 0.35, 4);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+let queued = false;
+function draw() { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; composer.render(); }); }
+
+let bounceTimer;
+function apply(key) {
+  const g = groups[key], col = kelvin(g.k), on = g.on ? g.dim : 0;
+  g.lights.forEach(L => { L.color.copy(col); L.intensity = LEVEL[key] * on * (L.userData.gain || 1); });
+  g.glow.forEach(m => { m.emissive.copy(col); m.emissiveIntensity = GLOW[key] * on; });
+  g.ribbons.forEach(m => m.color.copy(col).multiply(RIB_TINT).multiplyScalar(RIB * on));
+  document.querySelectorAll(`[data-k="${key}"]`).forEach(s => s.textContent = g.k);
+  clearTimeout(bounceTimer); bounceTimer = setTimeout(() => { bounce(); draw(); }, 90);
+  draw();
+}
+
+// ---------- UI ----------
+const KS = [2700, 3000, 4000, 6000];
+const host = document.getElementById('lights');
+host.style.display = 'grid'; host.style.gap = '8px';
+Object.entries(groups).forEach(([key, g]) => {
+  const el = document.createElement('div'); el.className = 'light';
+  el.innerHTML = `<div class="light-head"><span class="swatch"></span><div><div class="light-name">${g.name}</div><div class="light-sub">${g.sub}</div></div>
+    <label class="switch"><input type="checkbox" id="on-${key}" ${g.on ? 'checked' : ''} aria-label="${g.name} on or off"><span></span></label></div>
+    <div class="light-ctrl"><div class="kelvins" role="group" aria-label="${g.name} colour">${KS.map(k => `<button class="chip" data-kk="${k}" aria-pressed="${k === g.k}">${k}K</button>`).join('')}</div>
+    <input type="range" id="dim-${key}" min="0.1" max="1.6" step="0.05" value="${g.dim}" aria-label="${g.name} dimmer"></div>`;
+  const sw = el.querySelector('.swatch');
+  const sync = () => { sw.style.color = cssK(g.k); el.classList.toggle('off', !g.on); };
+  el.querySelector('input[type=checkbox]').addEventListener('change', e => { g.on = e.target.checked; sync(); apply(key); });
+  el.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
+    g.k = +b.dataset.kk; el.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === b)); sync(); apply(key);
+  }));
+  el.querySelector('input[type=range]').addEventListener('input', e => { g.dim = +e.target.value; apply(key); });
+  sync(); host.appendChild(el);
+});
+let spinning = false, last = 0;
+function spin(t) { if (!spinning) return; const dt = Math.min(0.05, (t - (last || t)) / 1000); last = t; rotor.rotation.y -= dt * 11; composer.render(); requestAnimationFrame(spin); }
+document.getElementById('fan-on').addEventListener('change', e => { spinning = e.target.checked; last = 0; if (spinning) requestAnimationFrame(spin); else draw(); });
+document.getElementById('exp').addEventListener('input', e => { renderer.toneMappingExposure = +e.target.value; draw(); });
+
+// ---------- camera: stand in the room and look around ----------
+let yaw = 0, pitch = 0;
+const VIEWS = {
+  'v-look': { p: [1.0, 1.6, 1.15], t: [-0.45, 3.0, -0.55], fov: 70 },
+  'v-bed':  { p: [0.0, 0.62, -0.2], t: [0.0, 3.0, -0.2001], fov: 82, yaw: Math.PI },
+  'v-room': { p: [1.35, 1.7, 1.4], t: [-0.6, 2.05, -0.95], fov: 80 },
+};
+function setView(id) {
+  const v = VIEWS[id]; camera.position.set(...v.p);
+  const d = new THREE.Vector3(...v.t).sub(camera.position);
+  yaw = v.yaw ?? Math.atan2(-d.x, -d.z); pitch = Math.min(1.55, Math.atan2(d.y, Math.hypot(d.x, d.z)));
+  camera.fov = v.fov; camera.updateProjectionMatrix(); orient();
+  document.querySelectorAll('.views button').forEach(b => b.setAttribute('aria-pressed', b.id === id));
+}
+function orient() { camera.rotation.set(pitch, yaw, 0); draw(); }
+document.querySelectorAll('.views button').forEach(b => b.addEventListener('click', () => setView(b.id)));
+
+const ptrs = new Map(); let pinch0 = 0, fov0 = 70;
+stage.addEventListener('pointerdown', e => { if (e.target.closest('button')) return; stage.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+  if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch0 = Math.hypot(a[0] - b[0], a[1] - b[1]); fov0 = camera.fov; } });
+stage.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) return; const prev = ptrs.get(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+  if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; const d = Math.hypot(a[0] - b[0], a[1] - b[1]); camera.fov = THREE.MathUtils.clamp(fov0 * pinch0 / d, 35, 95); camera.updateProjectionMatrix(); draw(); return; }
+  const k = 0.0042 * camera.fov / 70;
+  yaw += (e.clientX - prev[0]) * k; pitch = THREE.MathUtils.clamp(pitch + (e.clientY - prev[1]) * k, -1.3, 1.565); orient();
+});
+const up = e => ptrs.delete(e.pointerId);
+stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
+stage.addEventListener('wheel', e => { e.preventDefault(); camera.fov = THREE.MathUtils.clamp(camera.fov + e.deltaY * 0.03, 35, 95); camera.updateProjectionMatrix(); draw(); }, { passive: false });
+
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
+  renderer.setSize(w, h, false); composer.setSize(w, h);
+  camera.aspect = w / h; camera.updateProjectionMatrix(); draw();
+}
+new ResizeObserver(resize).observe(stage);
+
+Object.keys(groups).forEach(apply);
+setView('v-look'); resize();
+clearTimeout(bounceTimer); bounce(); draw();
+loading.hidden = true;
+window.__ready = true;
+}
+</script>
+
+</body></html>
